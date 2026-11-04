@@ -43,22 +43,37 @@ Although these problems have been addressed individually, the integration of the
 
 
 \section{General Opportunity}
-Previous research has attempted to formally model this so-called soft data but has been limited to small, indoor, controlled environments \cite{6301744}. Additionally, prior work on using humans of uncertain reliability to learn useful information about the world have focused on social media posts \cite{6846739} or binary measurements that are easy to verify (On truth discovery in social sensing: A maximum likelihood estimation approach) but not on ecological settings where binary classifications exist in some areas (e.g. species classification) but not in others (e.g. stage of treatment or restoration that an ecosystem is currently in).
+Previous research has attempted to formally model this so-called soft data but has been limited to small, indoor, controlled environments \cite{6301744}. Additionally, prior work on using humans of uncertain reliability to learn useful information about the world have focused on social media posts \cite{6846739} or binary measurements that are easy to verify \cite{on-truth-discovery} but not on ecological settings where binary classifications exist in some areas (e.g. species classification) but not in others (e.g. stage of treatment or restoration that an ecosystem is currently in).
 
 
-\section{Research Question}
+\section{Research Questions}
 How should a mixed team of agents be scheduled to minimize uncertainty about the varying spatiotemporal process of invasive species surveillance and management within a fixed budget, given that some of the agents’ error models are unknown, change over time and space, and can only be estimated from the observations themselves? Human field crews act as the main sensors of the system, while a ground-based robot with a characterized sensor serves as a reference.
 
 \subsection{Sensing}
-Can a detection model for each crew member, estimated from passively-logged survey telemetry, such as route, season or time spent per location, be estimated without the ground truth, through the use of overlapping surveying and reference to a ground-based robot?
 
-Detection probability by humans varies across temporal and spatial scales, influenced by the spatial density of the species being tracked and the amount of time allotted for a person to sample a field, although additional human-related factors such as fatigue and motivation may also influence this measurement \cite{plants-stand-still-but-hide}.
+    \begin{itemize}
+        \item \textbf{Research Question:} Can a detection model for each crew member, estimated from passively-logged survey telemetry, such as route, season or time spent per location, be estimated without the ground truth, through the use of overlapping surveying and reference to a ground-based robot?
+
+        \item \textbf{Hypothesis:} Detection probability by humans varies across temporal and spatial scales, influenced by the spatial density of the species being tracked and the amount of time allotted for a person to sample a field, although additional human-related factors such as fatigue and motivation may also influence this measurement \cite{plants-stand-still-but-hide}.
+    \end{itemize}
+
 
 \subsection{Harmonization}
-Does treating historical observations from different organizations as sensors with their own estimated error model produce more accurate estimates of invasive species extent and management state than pooling records as-is?
+
+    \begin{itemize}
+        \item \textbf{Research Question:} Does treating historical observations from different organizations as sensors with their own estimated error model produce more accurate estimates of invasive species extent and management state than pooling records as-is?
+
+        \item \textbf{Hypothesis:}
+    \end{itemize}
+
 
 \subsection{Acting}
-Is a survey planner that accounts for the individual uncertainty in each worker able to build an invasive species belief map with higher certainty than current practice or a survey planner that only assumes perfect detection rates for the workers?
+
+    \begin{itemize}
+        \item \textbf{Research Question:} Is a survey planner that accounts for the individual uncertainty in each worker able to build an invasive species belief map with higher certainty than current practice or a survey planner that only assumes perfect detection rates for the workers?
+
+        \item \textbf{Hypothesis:}
+    \end{itemize}
 
 
 \section{Approach}
