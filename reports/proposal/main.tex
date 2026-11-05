@@ -11,7 +11,7 @@
 
 \title{Title}
 
-\author{Alec Olson (ols00160@umn.edu}
+\author{Alec Olson (ols00160@umn.edu)}
 
 % \author{
 % \IEEEauthorblockA{}
@@ -62,9 +62,10 @@ How should a mixed team of agents be scheduled to minimize uncertainty about the
 \subsection{Harmonization}
 
     \begin{itemize}
-        \item \textbf{Research Question:} Does treating historical observations from different organizations as sensors with their own estimated error model produce more accurate estimates of invasive species extent and management state than pooling records as-is?
+        \item \textbf{Research Question:} Does treating historical observations from different organizations as sensors with their own estimated error model produce more accurate estimates of invasive species extent and management state than simple aggregation of them?
 
-        \item \textbf{Hypothesis:}
+        \item \textbf{Hypothesis:} Building a historical belief map of invasive species that is based on varying error models for different organizations and different data collection events will outperform the simplified aggregation approach. Errors in species detection can arise from methodological limitations, such as only recording species presence or through sample bias through decisions regarding survey locations, and it can also occur through surveying limitations, such as less-than-perfect detection rates of species by human field workers \cite{practical-guide-for-combining-data}, so a belief map will need to account for these imperfections of historical data.
+
     \end{itemize}
 
 
@@ -73,23 +74,24 @@ How should a mixed team of agents be scheduled to minimize uncertainty about the
     \begin{itemize}
         \item \textbf{Research Question:} Is a survey planner that accounts for the individual uncertainty in each worker able to build an invasive species belief map with higher certainty than current practice or a survey planner that only assumes perfect detection rates for the workers?
 
-        \item \textbf{Hypothesis:}
+        \item \textbf{Hypothesis:} Treating each worker as its own sensor with its own uncertainty and error model will improve the accuracy of the belief map compared to an approach that assumes perfect detection rates. Imperfect detection rates are influenced not just by species phenotype but also by individual variation in humans \cite{detectability-global-weed}, so a planner that adjusts for this relationship will perform better than one that does not.
     \end{itemize}
 
 
 \section{Approach}
-The overall system treats human field workers as both the sensors and actuators of a mobile sensing platform with the goal of detecting, treating, and managing invasive flora. Regional organizations make decisions regarding species of interest to track and organize workers, therefore setting human limits on the system. A planner works with these constraints and the current species belief map to make decisions regarding field work for detection, monitoring, or treatment.
+The overall system treats human field workers as both the sensors and actuators of a mobile sensing platform with the goal of detecting, treating, and managing invasive flora. Regional organizations make decisions regarding species of interest to track and organize workers across organizations with different resource budgets, therefore setting differential human limits on the system. A planner works with these constraints and the current species belief map to make decisions regarding field work for detection, monitoring, or treatment.
 
 In the field, data is passively recorded for workers through a phone app that tracks position and movement, and crews actively record per-species observations on presence, absence, or stage of treatment. These two complementary data streams are fed back into the belief map to estimate per-species location, density, and change over time. 
 
 The research contribution is focused on the planning and interpreting stages. A human sensor model will be built to estimate uncertainty in field workers’ measurements and observations, which may vary across both spatial and temporal scales, small and large. The species belief map is itself a probabilistic model for two reasons: firstly, because there will always be unsurveyed areas of land; and secondly, because the detection probability of field workers is almost always less than 100\%, there is a possibility that the presence of a given species in a given location is overlooked and incorrectly reported as absent. The planner must then take this probabilistic map and incorporate additional information regarding such variables as reliability of field workers, predicted likelihood of species presence, and seasonal considerations to support county-wide decision making for the management of invasive species.
 
-In Figure~\ref{fig:project-statement-diagram}, a high-level overview of the entire system is shown. The system has two sensing components: human field workers and a robotic dog. Both of these go into the field to collect data regarding invasive species extent, management, restoration, etc. Some data is collected manually, such as presence/absence of a given species, density, size, etc., while other data is collected passively by a phone app, including location and time.
+In Figure~\ref{fig:project-statement-diagram}, a high-level overview of the entire system is shown. The system has two sensing components: $n$ human field workers and $k$ quadruped robots. Both of these go into the field to collect data regarding invasive species extent, management, restoration, etc. Some data is collected manually, such as presence/absence of a given species, density, size, etc., while other data is collected passively by a phone app, including location and time. The manually-collected data may be well-structured and quantitative, but it may also include natural-language descriptors of the observations, and these two differing methods of input will require separate approaches to process; natural-language observations must be quantified in a way that allows them to contribute meaningful information to the system.
+
 Additional data that is fed into the system has two components. The first is historical invasive species data from organizations in Hennepin County, and the second is relevant local, timely data collected from third-party sources, such as weather data, satellite imagery, land cover classification, soil data, etc.
 
 The data collected in-field is then combined with the external data to build a belief map of invasive species extent and management in the county. This map is probabilistic in nature due to the uncertainty in modeling the accuracy of human field workers, so it should not be viewed as ground truth. Error models will have to be estimated for each data source, such as the field workers or any historical data.
 
-This belief map will then be used by the county to drive decision-making regarding how best to allocate the limited resources of the county, such as with money and time, to most effectively pursue the county’s goal of invasive species management. For example, it may be beneficial to send workers out to survey the same area multiple times if the map’s reliability of its estimates in this location is low. On the other hand, it might be acceptable to skip one particular area for surveying and instead focus on another area that could have a higher impact on the county’s natural resource management goals, such as by protecting a natural area the county has identified as important through the Prioritization Model.
+This belief map will then be used by the planner agent to drive decision-making regarding how best to allocate the limited resources of the county, such as with money and time, to most effectively pursue the county’s goal of invasive species management. For example, it may be beneficial to send workers out to survey the same area multiple times if the map’s reliability of its estimates in this location is low. On the other hand, it might be acceptable to skip one particular area for surveying and instead focus on another area that could have a higher impact on the county’s natural resource management goals, such as by protecting a natural area the county has identified as important through the Prioritization Model.
 
 \begin{figure*}[htbp]
     \centering
