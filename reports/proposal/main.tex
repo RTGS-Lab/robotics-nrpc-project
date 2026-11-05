@@ -48,7 +48,7 @@ Previous research has attempted to formally model this so-called soft data but h
 
 
 \section{Research Questions}
-How should a mixed team of agents be scheduled to minimize uncertainty about the varying spatiotemporal process of invasive species surveillance and management within a fixed budget, given that some of the agents’ error models are unknown, change over time and space, and can only be estimated from the observations themselves? Human field crews act as the main sensors of the system, while a ground-based robot with a characterized sensor serves as a reference.
+How should a mixed team of agents be scheduled to minimize uncertainty about the varying spatiotemporal process of invasive species surveillance and management within a fixed budget of people, money, and time, given that some of the agents’ error models are unknown, change over time and space, and can only be estimated from the observations themselves? Human field crews act as the main sensors of the system, while a ground-based robot with a characterized sensor serves as a reference. This general question can be broken into four main sub-questions around sensing and data harmonization.
 
 \subsection{Sensing}
 
@@ -84,6 +84,29 @@ The overall system treats human field workers as both the sensors and actuators 
 In the field, data is passively recorded for workers through a phone app that tracks position and movement, and crews actively record per-species observations on presence, absence, or stage of treatment. These two complementary data streams are fed back into the belief map to estimate per-species location, density, and change over time. 
 
 The research contribution is focused on the planning and interpreting stages. A human sensor model will be built to estimate uncertainty in field workers’ measurements and observations, which may vary across both spatial and temporal scales, small and large. The species belief map is itself a probabilistic model for two reasons: firstly, because there will always be unsurveyed areas of land; and secondly, because the detection probability of field workers is almost always less than 100\%, there is a possibility that the presence of a given species in a given location is overlooked and incorrectly reported as absent. The planner must then take this probabilistic map and incorporate additional information regarding such variables as reliability of field workers, predicted likelihood of species presence, and seasonal considerations to support county-wide decision making for the management of invasive species.
+
+What differentiates this problem from a pure multiobjective optimization problem is multifold. The output belief map is continuously updated based on field surveys, and decisions regarding where and when to conduct field work is based on the map. This means that the system will continuously adapt its policy recommendations rather than solving for a single optimized solution with a static set of inputs. The inputs themselves are not fully known; the reliability and error rates of the human workers are simultaneously inputs into the belief map as well as being continuously updated based on results of their surveys. Additionally, the ground truth (true invasive species presence, extent, and density) is never known because the belief map is probabilistic, so the system can never be fully deterministic.
+
+A modified version of Partially Observable Markov Decision Process (POMDP) can be used to formalize this system. POMDPs are useful when making decisions in scenarios where the environment cannot be fully known. In the field of biomonitoring, however, the exploration of unknown areas in order to reduce uncertainty about the presence of invasive species is the goal itself; in a traditional POMDP, learning more about the environment is a means in order to achieve some other goal, for example a robot learning about a room in order to vacuum its floors. Therefore, in the system I propose, a $\rho$POMDP will be more useful. In this formulation, the traditional reward function $r(s, a)$ of a POMDP, which defines the reward for taking a particular action $a$ given a particular state of the world $s$, is replaced by a belief-based reward function $\rho(b, a)$ which defines the reward for taking an action $a$ given a belief $b$ of the state of the world \cite{POMDP-extension}.
+
+This $\rho$POMDP is formalized as an 8-tuple $(S, A, \Omega, T, O, \rho, b_0, C)$, built off a standard POMDP \cite{POMDP-formulation} and defined as:
+\begin{itemize}
+    \item $S$: The set of states $(x, \theta)$ where $x$ is a binary classification of presence or absence of a species in a location (0 = absence, 1 = presence) and $\theta$ is a tuple of values $(\theta_1, \theta_2, ... \theta_k)$ where each $\theta_i$ is itself a tuple $(d_i, k_i)$ describing the detection rate and false-positive rate of each field worker $i$
+
+    \item $A$: The set of possible actions $(k, i)$ of sending a worker $k$ to a location $i$
+
+    \item $\Omega$: The observations by field workers regarding detection of a species
+
+    \item $T(s, a, s')$: The probability of being in state $s'$ at time $t+1$ given state $s$ and action $a$ at time $t$
+
+    \item $O$: The observation function describing the probability of accurate detection. $d_k = P(detected \; | \; x_i = 1)$ and $f_k = P(detected \; | \; x_i = 0)$
+
+    \item $\rho(b, a)$:The reward function for taking an action $a$ given belief $b$ of the state of the world
+
+    \item $b_0$: The initial belief of the world
+
+    \item $C$: The cost constraints of time, money, and humans
+\end{itemize}
 
 In Figure~\ref{fig:project-statement-diagram}, a high-level overview of the entire system is shown. The system has two sensing components: $n$ human field workers and $k$ quadruped robots. Both of these go into the field to collect data regarding invasive species extent, management, restoration, etc. Some data is collected manually, such as presence/absence of a given species, density, size, etc., while other data is collected passively by a phone app, including location and time. The manually-collected data may be well-structured and quantitative, but it may also include natural-language descriptors of the observations, and these two differing methods of input will require separate approaches to process; natural-language observations must be quantified in a way that allows them to contribute meaningful information to the system.
 
